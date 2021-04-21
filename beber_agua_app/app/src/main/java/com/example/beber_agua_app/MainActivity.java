@@ -77,9 +77,10 @@ public class MainActivity extends AppCompatActivity {
 
         button_notify = findViewById(R.id.button_notify);
         edit_txt_number_interval = findViewById(R.id.edit_txt_number_interval);
-        button_notify.setOnClickListener(notifyListenner);
         timePicker = findViewById(R.id.time_picker);
         timePicker.setIs24HourView(true);
+
+        button_notify.setOnClickListener(notifyListenner);
 
         setupUI(activated, preferences);
 
