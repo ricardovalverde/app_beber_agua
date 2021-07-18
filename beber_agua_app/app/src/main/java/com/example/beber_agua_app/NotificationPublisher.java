@@ -17,15 +17,15 @@ public class NotificationPublisher extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Intent intecao = new Intent(context.getApplicationContext(), MainActivity.class);
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intecao, 0);
+        Intent intent1 = new Intent(context.getApplicationContext(), MainActivity.class);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent1, 0);
 
-        String mensagem = intent.getStringExtra(KEY_NOTIFICATION);
+        String msg = intent.getStringExtra(KEY_NOTIFICATION);
         int id = intent.getIntExtra(NOTIFICATION_ID, 0);
 
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = getNotification(mensagem, context, notificationManager, pIntent);
+        Notification notification = getNotification(msg, context, notificationManager, pIntent);
         notificationManager.notify(id, notification);
     }
 
@@ -47,7 +47,5 @@ public class NotificationPublisher extends BroadcastReceiver {
             builder.setChannelId(channelID);
         }
         return builder.build();
-
-
     }
 }

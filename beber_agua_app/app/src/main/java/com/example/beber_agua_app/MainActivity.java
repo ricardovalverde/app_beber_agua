@@ -21,15 +21,14 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    ActionBar actionBar;
+    private ActionBar actionBar;
     private Button button_notify;
     private EditText edit_txt_number_interval;
     private TimePicker timePicker;
-    private boolean activated = false;
     private SharedPreferences preferences;
-    // SharedPreferences -> Mini banco de dados para guardar as preferências para que quando o app for reiniciado não perder os dados;
+    private boolean activated = false;
 
-    private final View.OnClickListener notifyListenner = new View.OnClickListener() {
+    private final View.OnClickListener notifyListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -47,27 +46,25 @@ public class MainActivity extends AppCompatActivity {
                 notificationAlarm(true, hour, minute, interval);
                 alert(R.string.alerta);
 
-
                 activated = true;
 
-
             } else {
+
                 updatePreferences(false, 0, 0, 0);
                 setupUI(false, preferences);
                 notificationAlarm(false, 0, 0, 0);
                 alert(R.string.alerta_pause);
-
 
                 activated = false;
             }
         }
     };
 
-    //AEB5BD
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         actionBar = getSupportActionBar();
         ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#61b3de"));
         actionBar.setBackgroundDrawable(colorDrawable);
@@ -80,10 +77,9 @@ public class MainActivity extends AppCompatActivity {
         timePicker = findViewById(R.id.time_picker);
         timePicker.setIs24HourView(true);
 
-        button_notify.setOnClickListener(notifyListenner);
+        button_notify.setOnClickListener(notifyListener);
 
         setupUI(activated, preferences);
-
 
     }
 
@@ -95,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             button_notify.setBackgroundResource(R.drawable.bg_button_pause);
 
 
-            /*Bloco onde vai procurar a horas e caso ainda não tenha um registro vai passar os valores atuais do timerpicker*/
+            //Bloco onde vai procurar as horas e caso ainda não tenha um registro vai passar os valores atuais do timerpicker
 
             int interval = preferences.getInt("KEY_INTERVAL", 0);
             int hour = preferences.getInt("KEY_HOUR", timePicker.getCurrentHour());
@@ -104,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
             edit_txt_number_interval.setText(String.valueOf(interval));
             timePicker.setCurrentHour(hour);
             timePicker.setCurrentMinute(minute);
+
         } else {
+
             button_notify.setText(R.string.notify);
             button_notify.setBackgroundResource(R.drawable.bg_button);
         }
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updatePreferences(boolean add, int hour, int minute, int interval) {
 
-        SharedPreferences.Editor editor = preferences.edit(); // Editor para poder guardar os dados
+        SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("activated", add);
 
         if (add) {
@@ -129,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
             editor.remove("KEY_MINUTE");
         }
         editor.apply();
-
     }
 
     private void notificationAlarm(boolean add, int hour, int minute, int interval) {
@@ -143,15 +140,16 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         if (add) {
+
             notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
             notificationIntent.putExtra(NotificationPublisher.KEY_NOTIFICATION, "Hora de beber água");
             PendingIntent broadcast = PendingIntent.getBroadcast(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval * 60 * 1000, broadcast);
         } else {
+
             PendingIntent broadcast = PendingIntent.getBroadcast(MainActivity.this, 0, notificationIntent, 0);
             alarmManager.cancel(broadcast);
         }
-
     }
 
     private boolean intervalIsValid() {
