@@ -1,4 +1,3 @@
-# beber-agua
 
 1º app do curso de Desenvolvimento Android(Java)
 
